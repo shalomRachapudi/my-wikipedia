@@ -85,7 +85,8 @@ function fetchContentFromWikipedia(title, remoteUrl)
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             
-            /* clear target */
+            /* clear target and article title*/
+            document.getElementById("heading").innerHTML = "";
             $('#target').html("");
             
             /* check if there's error : missingtitle */
