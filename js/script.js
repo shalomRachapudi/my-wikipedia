@@ -89,7 +89,7 @@ function fetchContentFromWikipedia(title, remoteUrl)
             $('#target').html("");
             
             /* check if there's error : missingtitle */
-            if (data.error && data.error.code == "missingtitle") {
+            if (data.error) {
                 $('#target').html("Page Doesn't Exist! Please Try Again <br><br>");
                 $('#target').append("Code: " + data.error.code + "<br>");
                 $('#target').append("Info: " + data.error.info + "<br>");
