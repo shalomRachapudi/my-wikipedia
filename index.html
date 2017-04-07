@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="viewport" content="width=device-width; maximum-scale=1; minimum-scale=1;" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"> -->
     <meta name="description" content="Wikipedia Mockup">
     <meta name="author" content="Shalom">
 
@@ -20,7 +22,7 @@
     <hr>
     <div class = "container">
         <!-- Desktop Sidebar -->
-        <button id = "hamburger-menu"></button><br> <!-- for mobiles - hamburger icon/button -->
+        <button id = "hamburger-menu"></button><br>
         <div class = "sidebar"> 
             <input type = "text" id = "searchValue" placeholder = "Enter Title to Fetch">
             <select id = "lang">
@@ -44,5 +46,30 @@
             <div id = "target"></div>
         </div>
     </div> <!-- container -->
+  
+    <!-- placed at the end so that page will load quicker -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+        /* The following script toggles hamburger-menu icon*/
+        $('#hamburger-menu').click(function() {
+            var sidebar = $(".sidebar").is(":visible");
+            $("[class^=sidebar]:visible").stop().slideUp("slow", function() {
+                /* 
+                 * Should remove style attribute from .sidebar after sliding up
+                 * otherwise .sidebar won't be visible when scaled from (max-width: 800px)
+                 * to width greater than 800px
+                 */
+                clearSidebarStyleAttribute();
+            });
+            if (!sidebar) {
+                $(".sidebar").slideDown();
+            }
+        });
+        
+        function clearSidebarStyleAttribute() {
+            $(".sidebar").removeAttr("style");
+        }
+    </script>
   </body>
 </html>
