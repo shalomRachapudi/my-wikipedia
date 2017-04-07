@@ -48,13 +48,9 @@ h1 {
 }
 
 
-.sidebar > * {
+#searchValue, #btn, #lang {
     margin-top:10px;
     width:200px;
-}
-
-#searchValue {
-    width: 183px;
 }
 
 #hamburger-menu {
