@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Wikipedia Mockup">
+    <meta name="author" content="Shalom">
+
+    <title>Wikipedia Mockup</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/script.js"></script>
+  </head>
+  
+  <body>
+    <div class = "header">
+        <img src = "images/icon_mockUp.png" class = "icon">
+        <h2 class = "app-title">My Wikipedia</h2>
+    </div>
+    <hr>
+    <div class = "container">
+        <!-- Desktop Sidebar -->
+        <button id = "hamburger-menu"></button><br> <!-- for mobiles - hamburger icon/button -->
+        <div class = "sidebar"> 
+            <input type = "text" id = "searchValue" placeholder = "Enter Title to Fetch">
+            <select id = "lang">
+                    <option value = "en" selected>English</option>
+                    <option value = "de">Deutsch</option>       <!-- German -->   
+                    <option value = "fr">français</option>      <!-- French -->
+                    <option value = "es">Español</option>       <!-- Spanish -->
+                    <option value = "no">Norsk bokmål</option>  <!-- Norwegian -->
+                    <option value = "el">Ελληνικά</option>      <!-- Greek -->
+                    <option value = "ar">العربية</option>       <!-- Arabic -->
+                    <option value = "hi">हिन्दी</option>           <!-- Hindi -->
+                    <option value = "th">ไทย</option>           <!-- Thai -->
+                    <option value = "ja">日本語</option>         <!-- Japanese -->  
+            </select>
+            <input type="button" id = "btn" value="Fetch" onclick = "search()">
+        </div>        
+     
+        <!-- display wikipedia content -->
+        <div class = "content">
+            <h1 id = "heading"></h1><br>
+            <div id = "target"></div>
+        </div>
+    </div> <!-- container -->
+  </body>
+</html>
