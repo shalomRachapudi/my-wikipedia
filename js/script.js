@@ -7,8 +7,9 @@
  * 
  * For more information, visit @Link:
  *      https://www.mediawiki.org/wiki/API:Main_page#The_endpoint
+ * 
+ * FIXME : Better handling of exceptions
  */
- 
 function getBaseUrl(lang)
 {
     try {
@@ -44,12 +45,12 @@ function getBaseUrl(lang)
                 return "https://ja.wikipedia.org/w/api.php";
                 break;
             default: /* Any other language */
-                //throw NoSuchLanguageSupportedException;
+                throw "We are sorry! No such language is supported.";
                 break;
         }
     }
     catch(exception) {
-        handleException(exception);
+        $('#target').html(exception); 
     }
 }
 
@@ -61,7 +62,6 @@ function getBaseUrl(lang)
  * @Link: https://www.mediawiki.org/wiki/API:Main_page#A_simple_example
  * 
  */
-
 function getRemoteUrl(lang)
 {
     var baseUrl = getBaseUrl(lang);
@@ -69,6 +69,62 @@ function getRemoteUrl(lang)
     return remoteUrl;
 }
 
+/*
+ * Fetches content using MediaWiki API
+ * @Link: https://en.wikipedia.org/w/api.php
+ */
+
+function fetchContentFromWikipedia(title, remoteUrl)
+{
+    $.ajax({
+        url: remoteUrl,
+        data: {page: title},
+        type: "GET",
+        headers: { 'Api-User-Agent': 'Wikipedia_Mockup'},
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            
+            /* clear target */
+            $('#target').html("");
+            
+            /* check if there's error : missingtitle */
+            if (data.error && data.error.code == "missingtitle") {
+                $('#target').html("Page Doesn't Exist! Please Try Again <br><br>");
+                $('#target').append("Code: " + data.error.code + "<br>");
+                $('#target').append("Info: " + data.error.info + "<br>");
+                return;
+            }
+            
+            /* get the html code and parse it */
+            var markup = data.parse.text["*"];
+            var html_code = $('<div></div>').html(markup);
+            
+            /* 
+             * check for redirect
+             * If there's a redirect, "data" contains a <ul> with .redirectText as its class
+             * .redirectText > li > a gives the title of the redirect page
+             * 
+             * We simply make another query with redirectName to fetch and show the content
+             */
+            var redirectName = html_code.find('.redirectText > li > a').text();
+            if (redirectName != '') {
+                fetchContentFromWikipedia(redirectName, remoteUrl);
+            }
+            
+            /* display content */
+            document.getElementById("heading").innerHTML = title; //set heading
+            $('#target').html($(html_code).find('p')); // content. (.find('p') is used to show only text
+        },
+        error: function (errorMessage) {
+            $('#target').html(errorMessage); 
+        }
+    });
+}
+
+/*
+ * search() controls the process of fetching content from wikipedia
+ */
 function search()
 { 
     /* get field values */
@@ -79,43 +135,9 @@ function search()
     /* get remote url */
     var remoteUrl = getRemoteUrl(lang);
     
-    console.log(title, lang, remoteUrl);
+    console.log(title, lang, remoteUrl); //debug
+    
     /* fetch content from wikipedia */
-    fetch(title, remoteUrl);
+    fetchContentFromWikipedia(title, remoteUrl);
 }
 
-function fetch(title, remoteUrl)
-{
-    $.ajax({
-        url: remoteUrl,
-        data: {page: title},
-        type: "GET",
-        headers: { 'Api-User-Agent': 'Wikipedia_Mockup'},
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $('#target').html("");
-            if (data.error && data.error.code == "missingtitle") {
-                $('#target').html("Page Doesn't Exist! Please Try Again <br><br>");
-                $('#target').append("Code: " + data.error.code + "<br>");
-                $('#target').append("Info: " + data.error.info + "<br>");
-                return;
-            }
-            
-            var markup = data.parse.text["*"];
-            var html_code = $('<div></div>').html(markup);
-            
-            /* check for redirect */
-            var redirectName = html_code.find('.redirectText > li > a').text();
-            if (redirectName != '') {
-                fetch(redirectName, remoteUrl);
-            }
-            
-            document.getElementById("heading").innerHTML = title;
-            $('#target').html($(html_code).find('p'));
-        },
-        error: function (errorMessage) {
-            $('#target').html(errorMessage); 
-        }
-    });
-}
