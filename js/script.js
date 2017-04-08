@@ -129,7 +129,7 @@ function fetchContentFromWikipedia(title, remoteUrl)
 function search()
 { 
     /* get field values */
-    var title = document.getElementById("searchValue").value;
+    var title = (document.getElementById("searchValue").value).toLowerCase();
     var ele_lang = document.getElementById("lang");
     var lang = ele_lang.options[ele_lang.selectedIndex].value;
     
